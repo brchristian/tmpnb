@@ -18,7 +18,7 @@ Get Docker, then:
 docker pull jupyter/minimal
 export TOKEN=$( head -c 30 /dev/urandom | xxd -p )
 docker run --net=host -d -e CONFIGPROXY_AUTH_TOKEN=$TOKEN --name=proxy jupyter/configurable-http-proxy --default-target http://127.0.0.1:9999
-docker run --net=host -d -e CONFIGPROXY_AUTH_TOKEN=$TOKEN --name=tmpnb -v /var/run/docker.sock:/docker.sock jupyter/tmpnb
+docker run --net=host -d -e CONFIGPROXY_AUTH_TOKEN=$TOKEN --name=tmpnb -v /var/run/docker.sock:/docker.sock zischwartz/tmpnb
 ```
 
 BAM! Visit your host on port 8000 and you have a working tmpnb setup. Note, if you are using boot2docker, then you can find your docker host's ip address by running the following command in your console:
@@ -31,10 +31,10 @@ If it didn't come up, try running `docker ps -a` and `docker logs tmpnb` to help
 
 #### Advanced configuration
 
-If you need to set the `docker-version` or other options, they can be passed to `jupyter/tmpnb` directly:
+If you need to set the `docker-version` or other options, they can be passed to `zischwartz/tmpnb` directly:
 
 ```
-docker run --net=host -d -e CONFIGPROXY_AUTH_TOKEN=$TOKEN -v /var/run/docker.sock:/docker.sock jupyter/tmpnb python orchestrate.py --cull-timeout=60 --docker-version="1.13" --command="ipython3 notebook --NotebookApp.base_url={base_path} --ip=0.0.0.0 --port {port}"
+docker run --net=host -d -e CONFIGPROXY_AUTH_TOKEN=$TOKEN -v /var/run/docker.sock:/docker.sock zischwartz/tmpnb python orchestrate.py --cull-timeout=60 --docker-version="1.13" --command="ipython3 notebook --NotebookApp.base_url={base_path} --ip=0.0.0.0 --port {port}"
 ```
 
 #### Launching with *your own* Docker images
@@ -44,7 +44,7 @@ tmpnb can run any Docker container provided by the `--image` option, so long as 
 ```
 docker run --net=host -d -e CONFIGPROXY_AUTH_TOKEN=$TOKEN \
            -v /var/run/docker.sock:/docker.sock \
-           jupyter/tmpnb python orchestrate.py --image='jupyter/demo' --command="ipython3 notebook --NotebookApp.base_url={base_path} --ip=0.0.0.0 --port {port}"
+           zischwartz/tmpnb python orchestrate.py --image='jupyter/demo' --command="ipython3 notebook --NotebookApp.base_url={base_path} --ip=0.0.0.0 --port {port}"
 ```
 
 #### Options
@@ -97,7 +97,7 @@ containers can be deleted.  Please work on an isolated machine and read
 the `cleanup` target in the `Makefile` prior to executing.
 
 ```
-git clone https://github.com/jupyter/tmpnb.git
+git clone https://github.com/zischwartz/tmpnb.git
 cd tmpnb
 
 # Kick off the proxy and run the server.
